@@ -1,0 +1,9 @@
+[submodule "dependencies/unity"]
+	path = dependencies/unity
+	url = https://github.com/ThrowTheSwitch/Unity.git
+[submodule "dependencies/tinycbor"]
+	path = dependencies/tinycbor
+	url = https://github.com/intel/tinycbor.git
+[submodule "dependencies/ascon-c"]
+	path = dependencies/ascon-c
+	url = https://github.com/ascon/ascon-c.git

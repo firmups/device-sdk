@@ -1,0 +1,4 @@
+name: firmups-device-sdk
+build:
+  cmake: .
+  kconfig: ./zephyr/Kconfig

@@ -1,0 +1,33 @@
+{
+  "files.associations": {
+    "sdk.h": "c",
+    "encryption.h": "c",
+    "crypto.h": "c",
+    "ascon.h": "c",
+    "api.h": "c",
+    "crypto_aead.h": "c",
+    "stdint.h": "c",
+    "cstdint": "c",
+    "initializer_list": "c",
+    "stdio.h": "c",
+    "cose.h": "c",
+    "cbor.h": "c",
+    "cstdlib": "c",
+    "__config": "c",
+    "stdlib.h": "c",
+    "type_traits": "c",
+    "__bit_reference": "c",
+    "bitset": "c",
+    "limits": "c",
+    "locale": "c",
+    "optional": "c",
+    "ratio": "c",
+    "compare": "c",
+    "variant": "c",
+    "unity.h": "c",
+    "stdarg.h": "c",
+    "operation.h": "c",
+    "error.h": "c"
+  },
+  "editor.formatOnSave": true
+}
