@@ -1,0 +1,75 @@
+name: Build Component
+
+on:
+  workflow_call:
+
+jobs:
+  check-dependency-versions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        if: ${{ github.event.inputs.releaseType == 'stable' }}
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Check dependency versions
+        if: ${{ github.event.inputs.releaseType == 'stable' }}
+        run: |
+          for d in dependencies/*; do
+            [[ -d "$d" ]] || continue
+            REV=$(git submodule status $d | awk '{print $1}')
+            if grep -nFq "rev = \"$REV\"" flake.nix; then
+              echo "Found rev $REV for dependency $d in flake.nix"
+            else
+              echo "Error: rev $REV for dependency $d not found in flake.nix"
+              exit 1
+            fi
+          done
+
+  build:
+    name: Build (matrix)
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+
+          # - os: macos-latest
+          #   target: aarch64-apple-darwin
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - uses: actions/cache@v4
+        with:
+          path: /tmp/nix-build
+          key: nix-tmp-${{ runner.os }}
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v27
+
+      - name: Build with Nix
+        shell: bash
+        run: |
+          set -euxo pipefail
+          nix build .#firmups-device-sdk
+          FILE_NAME="firmups-device-sdk-${{ matrix.target }}"
+          tar -czf "${FILE_NAME}.tar.gz" \
+            -C result \
+            --transform="s,^\.$,${FILE_NAME}," \
+            --transform="s,^\./,${FILE_NAME}/," \
+            .
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target }}
+          path: firmups-device-sdk-${{ matrix.target }}.tar.gz
+          retention-days: 1

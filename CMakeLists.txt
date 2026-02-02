@@ -39,7 +39,7 @@ include(cmake/tinycbor.cmake)
 include(cmake/ascon.cmake)
 
 # Add library
-add_library(firmups-device-sdk 
+add_library(firmups-device-sdk-obj OBJECT
     src/sdk.c
     src/codec/cbor_helper.c
     src/codec/cose.c
@@ -48,19 +48,22 @@ add_library(firmups-device-sdk
     src/operation/firmware.c
     src/operation/parameter.c
     src/operation/error.c)
-target_link_options(firmups-device-sdk  PRIVATE "-static")
-target_link_libraries(firmups-device-sdk PRIVATE tinycbor)
+#target_compile_options(firmups-device-sdk PRIVATE -fvisibility=hidden)
+set_target_properties(tinycbor PROPERTIES POSITION_INDEPENDENT_CODE ON)
+target_link_libraries(firmups-device-sdk-obj PRIVATE tinycbor)
 if(NOT DEFINED FIRMUPS_USE_AES AND NOT DEFINED FIRMUPS_USE_CRYPTO_CALLBACKS)
-    target_link_libraries(firmups-device-sdk PRIVATE crypto_aead_asconaead128_${FIRMUPS_ASCON_IMPL})
+    set_target_properties(crypto_aead_asconaead128_${FIRMUPS_ASCON_IMPL} PROPERTIES POSITION_INDEPENDENT_CODE ON)
+    target_link_libraries(firmups-device-sdk-obj PRIVATE crypto_aead_asconaead128_${FIRMUPS_ASCON_IMPL})
 endif()
-warn_all(firmups-device-sdk)
-configure_firmups_sdk(firmups-device-sdk)
+
+warn_all(firmups-device-sdk-obj)
+configure_firmups_sdk(firmups-device-sdk-obj)
 
 if(NOT DEFINED FIRMUPS_LOG_LEVEL AND CMAKE_BUILD_TYPE STREQUAL "Debug")
-    target_compile_definitions(firmups-device-sdk PRIVATE FIRMUPS_LOG_LEVEL_DEBUG)
+    target_compile_definitions(firmups-device-sdk-obj PRIVATE FIRMUPS_LOG_LEVEL_DEBUG)
 endif()
 
-target_include_directories(firmups-device-sdk
+target_include_directories(firmups-device-sdk-obj
     PUBLIC
         ${PROJECT_SOURCE_DIR}/include
 )
@@ -74,10 +77,19 @@ if(DEFINED FIRMUPS_TESTING)
     ## Add test executable
     add_executable(firmups-device-sdk-tests test/sdk_test.c)
     #target_link_options(firmups-device-sdk-tests PRIVATE "-static")
-    target_link_libraries(firmups-device-sdk-tests firmups-device-sdk unity)
+    target_link_libraries(firmups-device-sdk-tests firmups-device-sdk-obj unity)
     configure_firmups_sdk(firmups-device-sdk-tests)
 
     # # Optionally add a test target
     enable_testing()
     add_test(NAME firmups-device-sdk-test COMMAND firmups-device-sdk-tests)
 endif()
+
+# Shared library (.so)
+add_library(firmups-device-sdk SHARED $<TARGET_OBJECTS:firmups-device-sdk-obj>)
+
+# Static library (.a)
+add_library(firmups-device-sdk-static STATIC $<TARGET_OBJECTS:firmups-device-sdk-obj>)
+
+# Optional: make the static library install name also be libfirmups-device-sdk.a
+set_target_properties(firmups-device-sdk-static PROPERTIES OUTPUT_NAME firmups-device-sdk)

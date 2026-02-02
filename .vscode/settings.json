@@ -29,5 +29,11 @@
     "operation.h": "c",
     "error.h": "c"
   },
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "[nix]": {
+    "editor.defaultFormatter": "jnoortheen.nix-ide"
+  },
+  "[c]": {
+    "editor.defaultFormatter": "xaver.clang-format"
+  }
 }
