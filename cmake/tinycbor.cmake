@@ -16,7 +16,7 @@ endif()
 # Include additional modules that are used unconditionally
 include(GenerateExportHeader)
 
-add_library(tinycbor
+add_library(tinycbor STATIC
   ${TINYCBOR_ROOT}/src/cborencoder.c
   ${TINYCBOR_ROOT}/src/cborencoder_close_container_checked.c
   ${TINYCBOR_ROOT}/src/cborerrorstrings.c
@@ -25,6 +25,7 @@ add_library(tinycbor
   ${TINYCBOR_ROOT}/src/cborvalidation.c
   ${TINYCBOR_ROOT}/src/cbor.h
 )
+target_compile_options(tinycbor PRIVATE -fvisibility=hidden)
 if(WITH_FREESTANDING)
   target_compile_options(tinycbor PUBLIC
     $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-ffreestanding>

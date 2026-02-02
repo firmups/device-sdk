@@ -299,7 +299,7 @@ static enum firmups_sdk_error_code sdk_get_device_info(struct firmups_sdk_contex
 
 	ret_code = operation_create_get_device_info_request(
 		context->device_id, context->response_buffer, sizeof(context->response_buffer),
-							    &out_opcode, &o_size);
+		&out_opcode, &o_size);
 	if (ret_code != FIRMUPS_SDK_ERROR_NONE) {
 		return ret_code;
 	}
