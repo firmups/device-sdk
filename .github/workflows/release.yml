@@ -1,0 +1,24 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release (X.Y.Z)"
+        required: true
+
+      releaseType:
+        description: "Release type"
+        required: true
+        default: "develop"
+        type: choice
+        options:
+          - "develop"
+          - "stable"
+
+jobs:
+  placeholder:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Placeholder step
+        run: echo "This is a placeholder job for the release workflow."

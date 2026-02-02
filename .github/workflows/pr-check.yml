@@ -1,0 +1,12 @@
+name: PR-Check
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  placeholder:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Placeholder step
+        run: echo "This is a placeholder job for the PR-Check workflow."
