@@ -1,4 +1,4 @@
-if(CONFIG_FIRMUPS_MODULE)
+if(CONFIG_FIRMUPS)
     include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/warn_all.cmake)
     include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/config.cmake)
 
@@ -22,6 +22,11 @@ if(CONFIG_FIRMUPS_MODULE)
     if(DEFINED CONFIG_FIRMUPS_LOG_LEVEL)
         target_compile_definitions(${ZEPHYR_CURRENT_LIBRARY} PRIVATE FIRMUPS_LOG_LEVEL=${CONFIG_FIRMUPS_LOG_LEVEL})
         zephyr_compile_definitions(FIRMUPS_LOG_LEVEL=${CONFIG_FIRMUPS_LOG_LEVEL})
+    endif()
+
+    if(CONFIG_FIRMUPS_GATEWAY)
+        target_compile_definitions(${ZEPHYR_CURRENT_LIBRARY} PRIVATE FIRMUPS_GATEWAY)
+        zephyr_compile_definitions(FIRMUPS_GATEWAY)
     endif()
 
 
