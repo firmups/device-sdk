@@ -56,6 +56,11 @@ if(NOT DEFINED FIRMUPS_USE_AES AND NOT DEFINED FIRMUPS_USE_CRYPTO_CALLBACKS)
     target_link_libraries(firmups-device-sdk-obj PRIVATE crypto_aead_asconaead128_${FIRMUPS_ASCON_IMPL})
 endif()
 
+option(FIRMUPS_GATEWAY "Enable gateway API (send_message and send_operation)" OFF)
+if(FIRMUPS_GATEWAY)
+    message(STATUS "FIRMUPS_GATEWAY enabled: gateway send_message API included")
+endif()
+
 warn_all(firmups-device-sdk-obj)
 configure_firmups_sdk(firmups-device-sdk-obj)
 

@@ -1,11 +1,13 @@
-config FIRMUPS_MODULE
-    bool "Enable FIRMUPS"
-    default y
-    help
-      Enable support for FIRMUPS Agent Module.
-
 module = FIRMUPS
 module-str = "FIRMUPS"
+
+menuconfig $(module)
+	bool "Enable $(module-str) device SDK"
+	default y
+	help
+	  Enable support for the FIRMUPS device SDK.
+
+if $(module)
 
 choice "$(module)_LOG_LEVEL_CHOICE"
 	prompt "Max compiled-in log level for $(module-str)"
@@ -57,3 +59,11 @@ endchoice
 
 config $(module)_ENCRYPTION_CALLBACKS
 	bool "Use encryption callbacks instead of builtin"
+
+config $(module)_GATEWAY
+	bool "Enable gateway API"
+	help
+	  Enable firmups_sdk_gateway_send_message allowing raw COSE
+	  message pass-through.
+
+endif # $(module)

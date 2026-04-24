@@ -103,4 +103,11 @@ firmups_sdk_firmware_download_get_chunk(struct firmups_sdk_context *context, uin
 enum firmups_sdk_error_code
 firmups_sdk_firmware_download_finish(struct firmups_sdk_context *context);
 
+#ifdef FIRMUPS_GATEWAY
+enum firmups_sdk_error_code
+firmups_sdk_gateway_send_message(struct firmups_sdk_context *context, const uint8_t *message,
+				 uint16_t message_size, uint8_t *response_buffer,
+				 uint16_t response_buffer_size, uint16_t *response_size);
+#endif // FIRMUPS_GATEWAY
+
 #endif // FIRMUPS_DEVICE_SDK_SDK_H

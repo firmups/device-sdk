@@ -527,3 +527,26 @@ static enum firmups_sdk_error_code sdk_firmware_download_finish(struct firmups_s
 	UNLOCK_CONTEXT(download_context);
 	return FIRMUPS_SDK_ERROR_NONE;
 }
+
+#ifdef FIRMUPS_GATEWAY
+enum firmups_sdk_error_code
+firmups_sdk_gateway_send_message(struct firmups_sdk_context *context, const uint8_t *message,
+				 uint16_t message_size, uint8_t *response_buffer,
+				 uint16_t response_buffer_size, uint16_t *response_size)
+{
+	if (context == NULL || message == NULL || response_buffer == NULL ||
+	    response_size == NULL) {
+		FIRMUPS_LOG_ERROR("Invalid argument to firmups_sdk_gateway_send_message\n");
+		return FIRMUPS_SDK_ERROR_INVALID_ARGUMENT;
+	}
+
+	enum firmups_sdk_error_code ret_code;
+	LOCK_CONTEXT(context, FIRMUPS_SDK_ERROR_UNSUPPORTED_CONCURRENCY);
+	ret_code = context->api.send_data((uint8_t *)message, message_size, response_buffer,
+					  response_buffer_size, response_size,
+					  context->api.send_data_userdata);
+	UNLOCK_CONTEXT(context);
+	return ret_code;
+}
+
+#endif // FIRMUPS_GATEWAY
